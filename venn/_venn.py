@@ -180,7 +180,7 @@ def is_valid_dataset_dict(data):
     else:
         return True
 
-def venn_dispatch(data, func, fmt="{size}", hint_hidden=False, cmap="viridis", alpha=.4, figsize=(8, 8), fontsize=13, legend_loc="upper right", ax=None):
+def venn_dispatch(data, func, fmt="{size}", hint_hidden=False, cmap="viridis", alpha=.4, figsize=(8, 8), fontsize=13, legend_loc="upper right", ax=None, colors=None):
     """Check input, generate petal labels, draw venn or pseudovenn diagram"""
     if not is_valid_dataset_dict(data):
         raise TypeError("Only dictionaries of sets are understood")
@@ -188,10 +188,12 @@ def venn_dispatch(data, func, fmt="{size}", hint_hidden=False, cmap="viridis", a
         error_message = "To use fmt='{}', set hint_hidden=False".format(fmt)
         raise NotImplementedError(error_message)
     n_sets = len(data)
+    if colors is None:
+        colors = generate_colors(cmap, n_sets, alpha)
     return func(
         petal_labels=generate_petal_labels(data.values(), fmt),
         dataset_labels=data.keys(), hint_hidden=hint_hidden,
-        colors=generate_colors(n_colors=n_sets, cmap=cmap, alpha=alpha),
+        colors=colors,
         figsize=figsize, fontsize=fontsize, legend_loc=legend_loc, ax=ax
     )
 
